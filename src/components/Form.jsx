@@ -1,7 +1,11 @@
+import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import FormStep from "./FormStep"
+import useLocalStorage from "../hooks/useLocalStorage";
 
 export default function Form() {
+    const [userStep, setUserStep] = useLocalStorage("userStep", 0);
+
     async function fetchFormSteps() {
         const response = await fetch('http://localhost/logo-estimator/api/data.json') // hosted on xampp
         return response.json()
@@ -28,7 +32,11 @@ export default function Form() {
             
             <form className="w-100 max-w-[640px] mx-auto">
                 {/* {data.map(step => <FormStep data={step} />)} */}
-                <FormStep data={data[1]} />
+                <FormStep data={data[userStep]} />
+                <button type="button" onClick={() => {
+                    setUserStep(JSON.parse(userStep) + 1);
+                    console.log("step", userStep);
+                }}>Next</button>
             </form>
         </>
     )
